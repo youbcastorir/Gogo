@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DomainPrice AI — Instant Domain Valuation</title>
+<meta name="description" content="AI-powered domain name appraisal. Get instant valuations, brandability scores, and premium keyword analysis for any domain name.">
+<meta name="keywords" content="domain appraisal, domain valuation, domain price, AI domain checker, domain worth">
+<meta property="og:title" content="DomainPrice AI — Instant Domain Valuation">
+<meta property="og:description" content="AI-powered domain name appraisal tool. Free instant valuations.">
+<meta property="og:type" content="website">
+<meta name="robots" content="index, follow">
+<!--
+robots.txt:
+User-agent: *
+Allow: /
+Sitemap: https://yourdomain.com/sitemap.xml
+
+sitemap.xml:
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://yourdomain.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+</urlset>
+-->
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap');
+:root{
+--bg:#020408;--bg2:#060d14;--bg3:#0a1628;
+--neon:#00d4ff;--neon2:#0088cc;--neon3:#00ffaa;
+--accent:#ff3366;--gold:#ffd700;
+--text:#e0f0ff;--muted:#4a7090;
+--glass:rgba(0,180,255,0.06);--glass2:rgba(0,180,255,0.12);
+--border:rgba(0,180,255,0.18);--border2:rgba(0,180,255,0.35);
+--glow:0 0 20px rgba(0,212,255,0.4),0 0 60px rgba(0,212,255,0.15);
+--glow2:0 0 8px rgba(0,212,255,0.6);
+--r:12px;--r2:20px;
+}
+[data-theme=light]{
+--bg:#f0f6ff;--bg2:#e4eeff;--bg3:#d8e8ff;
+--neon:#0077bb;--neon2:#005599;--neon3:#007755;
+--text:#0a2040;--muted:#6688aa;
+--glass:rgba(0,100,200,0.06);--glass2:rgba(0,100,200,0.1);
+--border:rgba(0,100,200,0.2);--border2:rgba(0,100,200,0.4);
+--glow:0 0 20px rgba(0,120,200,0.2);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);
+min-height:100vh;overflow-x:hidden;
+}
+body::before{
+content:'';position:fixed;inset:0;
+background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(0,180,255,0.12),transparent),
+radial-gradient(ellipse 50% 40% at 80% 60%,rgba(0,255,170,0.05),transparent);
+pointer-events:none;z-index:0;
+}
+.noise{
+position:fixed;inset:0;opacity:.03;pointer-events:none;z-index:1;
+background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+a{color:var(--neon);text-decoration:none}
+button{cursor:pointer;font-family:inherit}
+.container{max-width:1100px;margin:0 auto;padding:0 20px;position:relative;z-index:2}
+/* NAV */
+nav{
+position:fixed;top:0;width:100%;z-index:100;
+background:rgba(2,4,8,0.8);backdrop-filter:blur(20px);
+border-bottom:1px solid var(--border);
+}
+[data-theme=light] nav{background:rgba(240,246,255,0.85)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;max-width:1100px;margin:0 auto}
+.logo{font-family:'Orbitron',monospace;font-weight:900;font-size:1.1rem;letter-spacing:2px;
+color:var(--neon);text-shadow:var(--glow2)}
+.logo span{color:var(--neon3)}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{font-size:.82rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;transition:.2s}
+.nav-links a:hover{color:var(--neon)}
+#themeBtn{
+background:var(--glass);border:1px solid var(--border);border-radius:8px;
+padding:6px 12px;font-size:.8rem;color:var(--text);letter-spacing:1px;transition:.2s;
+}
+#themeBtn:hover{border-color:var(--neon);box-shadow:var(--glow2)}
+/* HERO */
+.hero{
+padding:140px 0 80px;text-align:center;
+}
+.hero-badge{
+display:inline-flex;align-items:center;gap:8px;
+background:var(--glass2);border:1px solid var(--border2);
+border-radius:50px;padding:6px 16px;font-size:.75rem;
+letter-spacing:2px;text-transform:uppercase;color:var(--neon);
+margin-bottom:28px;animation:fadeUp .6s ease both;
+}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--neon3);
+box-shadow:0 0 8px var(--neon3);animation:pulse 1.5s ease infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+h1{
+font-family:'Orbitron',monospace;font-size:clamp(2rem,5vw,3.8rem);
+font-weight:900;line-height:1.1;letter-spacing:-1px;
+animation:fadeUp .7s .1s ease both;
+}
+h1 .g{
+background:linear-gradient(90deg,var(--neon),var(--neon3));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero p{
+font-size:1.05rem;color:var(--muted);max-width:520px;
+margin:16px auto 0;line-height:1.7;
+animation:fadeUp .7s .2s ease both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+/* CALCULATOR CARD */
+.calc-card{
+background:var(--glass);backdrop-filter:blur(20px);
+border:1px solid var(--border);border-radius:var(--r2);
+padding:36px;margin:40px 0;
+box-shadow:0 0 40px rgba(0,180,255,0.08);
+animation:fadeUp .7s .3s ease both;
+}
+.calc-title{
+font-family:'Orbitron',monospace;font-size:1rem;letter-spacing:3px;
+text-transform:uppercase;color:var(--neon);margin-bottom:28px;
+display:flex;align-items:center;gap:10px;
+}
+.calc-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.input-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+#domainInput{
+flex:1;min-width:200px;
+background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
+padding:14px 18px;font-size:1rem;font-family:'Share Tech Mono',monospace;
+color:var(--text);outline:none;transition:.25s;letter-spacing:1px;
+}
+#domainInput:focus{border-color:var(--neon);box-shadow:0 0 0 3px rgba(0,180,255,0.12)}
+#tldSelect{
+background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
+padding:14px 14px;font-size:.9rem;color:var(--text);outline:none;
+font-family:'Share Tech Mono',monospace;cursor:pointer;transition:.25s;
+}
+#tldSelect:focus{border-color:var(--neon)}
+#appraiseBtn{
+background:linear-gradient(135deg,var(--neon2),var(--neon));
+border:none;border-radius:var(--r);padding:14px 28px;
+font-family:'Orbitron',monospace;font-size:.85rem;font-weight:700;
+letter-spacing:2px;color:#000;transition:.25s;white-space:nowrap;
+}
+#appraiseBtn:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,180,255,0.4)}
+#appraiseBtn:active{transform:translateY(0)}
+/* RESULTS */
+#results{display:none;animation:fadeUp .4s ease both}
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin:24px 0}
+.metric{
+background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);
+padding:18px;text-align:center;transition:.25s;
+}
+.metric:hover{border-color:var(--border2);transform:translateY(-2px)}
+.metric-val{
+font-family:'Orbitron',monospace;font-size:1.6rem;font-weight:900;
+color:var(--neon);text-shadow:var(--glow2);
+}
+.metric-lbl{font-size:.72rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+.price-display{
+background:linear-gradient(135deg,rgba(0,180,255,.08),rgba(0,255,170,.05));
+border:1px solid var(--border2);border-radius:var(--r2);
+padding:28px;text-align:center;margin:20px 0;
+position:relative;overflow:hidden;
+}
+.price-display::before{
+content:'';position:absolute;inset:0;
+background:radial-gradient(ellipse at 50% 0%,rgba(0,212,255,.1),transparent 60%);
+}
+.price-label{font-size:.8rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.price-value{
+font-family:'Orbitron',monospace;font-size:clamp(2rem,6vw,3.5rem);font-weight:900;
+background:linear-gradient(90deg,var(--neon),var(--neon3));
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+position:relative;z-index:1;
+}
+.price-range{font-size:.82rem;color:var(--muted);margin-top:6px;position:relative;z-index:1}
+.tags-row{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.tag{
+background:var(--glass2);border:1px solid var(--border);border-radius:50px;
+padding:4px 14px;font-size:.75rem;letter-spacing:1px;
+}
+.tag.good{border-color:rgba(0,255,170,.4);color:var(--neon3)}
+.tag.bad{border-color:rgba(255,51,102,.4);color:var(--accent)}
+.tag.neutral{border-color:var(--border2);color:var(--neon)}
+/* METER */
+.meter-wrap{margin:20px 0}
+.meter-label{font-size:.78rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;justify-content:space-between}
+.meter-bar{height:8px;background:var(--bg3);border-radius:4px;overflow:hidden}
+.meter-fill{height:100%;border-radius:4px;transition:width 1s cubic-bezier(.16,1,.3,1);position:relative}
+.meter-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);animation:shimmer 2s infinite}
+@keyframes shimmer{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.ai-bar .meter-fill{background:linear-gradient(90deg,var(--neon2),var(--neon),var(--neon3))}
+.brand-bar .meter-fill{background:linear-gradient(90deg,#7b2fff,#e040fb)}
+.btn-row{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+.btn-sec{
+background:var(--glass2);border:1px solid var(--border);border-radius:var(--r);
+padding:10px 20px;font-size:.8rem;letter-spacing:1px;color:var(--text);transition:.2s;
+}
+.btn-sec:hover{border-color:var(--neon);color:var(--neon);box-shadow:var(--glow2)}
+/* SALES TICKER */
+.ticker-section{margin:60px 0}
+.section-title{
+font-family:'Orbitron',monospace;font-size:.85rem;letter-spacing:4px;
+text-transform:uppercase;color:var(--neon);margin-bottom:24px;
+display:flex;align-items:center;gap:12px;
+}
+.section-title::before,.section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.ticker-wrap{overflow:hidden;border:1px solid var(--border);border-radius:var(--r);background:var(--glass)}
+.ticker-inner{display:flex;gap:0;animation:ticker 30s linear infinite}
+.ticker-inner:hover{animation-play-state:paused}
+.tick-item{
+display:flex;align-items:center;gap:12px;padding:14px 28px;
+white-space:nowrap;border-right:1px solid var(--border);
+font-size:.82rem;
+}
+.tick-domain{font-family:'Share Tech Mono',monospace;color:var(--neon);letter-spacing:1px}
+.tick-price{font-family:'Orbitron',monospace;font-weight:700;color:var(--neon3)}
+.tick-time{color:var(--muted);font-size:.75rem}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+/* SUGGESTIONS */
+.suggest-section{margin:60px 0}
+.suggest-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.suggest-card{
+background:var(--glass);border:1px solid var(--border);border-radius:var(--r);
+padding:16px;display:flex;flex-direction:column;gap:6px;
+transition:.25s;cursor:pointer;
+}
+.suggest-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,180,255,.1)}
+.sug-name{font-family:'Share Tech Mono',monospace;color:var(--neon);font-size:.9rem;letter-spacing:1px}
+.sug-price{font-family:'Orbitron',monospace;font-size:.8rem;color:var(--neon3)}
+.sug-score{font-size:.72rem;color:var(--muted)}
+.gen-btn{
+background:var(--glass2);border:1px solid var(--border);border-radius:var(--r);
+padding:12px 24px;font-family:'Orbitron',monospace;font-size:.8rem;
+letter-spacing:2px;color:var(--neon);transition:.2s;margin-bottom:20px;
+}
+.gen-btn:hover{border-color:var(--neon);box-shadow:var(--glow)}
+/* HISTORY */
+.history-section{margin:60px 0}
+.history-list{display:flex;flex-direction:column;gap:10px;max-height:300px;overflow-y:auto}
+.history-list::-webkit-scrollbar{width:4px}
+.history-list::-webkit-scrollbar-track{background:var(--bg2)}
+.history-list::-webkit-scrollbar-thumb{background:var(--neon2);border-radius:2px}
+.hist-item{
+display:flex;align-items:center;justify-content:space-between;
+background:var(--glass);border:1px solid var(--border);border-radius:var(--r);
+padding:12px 16px;cursor:pointer;transition:.2s;
+}
+.hist-item:hover{border-color:var(--border2)}
+.hist-domain{font-family:'Share Tech Mono',monospace;color:var(--neon);font-size:.9rem}
+.hist-price{font-family:'Orbitron',monospace;font-size:.85rem;color:var(--neon3)}
+.hist-time{font-size:.72rem;color:var(--muted)}
+.clear-btn{
+background:none;border:1px solid rgba(255,51,102,.3);border-radius:var(--r);
+padding:8px 16px;font-size:.75rem;letter-spacing:1px;color:var(--accent);
+transition:.2s;margin-top:12px;
+}
+.clear-btn:hover{background:rgba(255,51,102,.1)}
+/* FAQ */
+.faq-section{margin:60px 0}
+.faq-item{border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.faq-q{
+display:flex;justify-content:space-between;align-items:center;
+padding:16px 20px;cursor:pointer;font-size:.9rem;transition:.2s;
+background:var(--glass);
+}
+.faq-q:hover{background:var(--glass2)}
+.faq-q .arr{color:var(--neon);transition:.3s;font-size:1.1rem}
+.faq-item.open .faq-q .arr{transform:rotate(180deg)}
+.faq-a{
+max-height:0;overflow:hidden;transition:max-height .35s ease;
+font-size:.85rem;color:var(--muted);line-height:1.7;
+}
+.faq-a p{padding:0 20px 16px}
+.faq-item.open .faq-a{max-height:200px}
+/* FOOTER */
+footer{
+border-top:1px solid var(--border);padding:40px 0 30px;
+text-align:center;color:var(--muted);font-size:.8rem;
+}
+footer .logo{display:inline-block;margin-bottom:12px;font-size:.95rem}
+footer p{line-height:1.8}
+footer a{color:var(--muted)}footer a:hover{color:var(--neon)}
+/* TOAST */
+#toast{
+position:fixed;bottom:30px;right:30px;z-index:999;
+background:var(--bg3);border:1px solid var(--neon);border-radius:var(--r);
+padding:12px 20px;font-size:.82rem;color:var(--neon);
+box-shadow:var(--glow);opacity:0;transform:translateY(10px);
+transition:.3s;pointer-events:none;
+}
+#toast.show{opacity:1;transform:translateY(0)}
+/* GRID SCAN LINE */
+.scanlines{
+position:fixed;inset:0;pointer-events:none;z-index:0;
+background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,180,255,.015) 2px,rgba(0,180,255,.015) 4px);
+}
+/* RESPONSIVE */
+@media(max-width:600px){
+.nav-links a:not(:last-child){display:none}
+.input-row{flex-direction:column}
+#appraiseBtn{width:100%}
+.btn-row{flex-direction:column}
+h1{font-size:2rem}
+.calc-card{padding:24px 16px}
+}
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="scanlines"></div>
+
+<nav>
+<div class="nav-inner">
+<div class="logo">Domain<span>Price</span> AI</div>
+<div class="nav-links">
+<a href="#calculator">Appraise</a>
+<a href="#sales">Sales</a>
+<a href="#suggestions">Ideas</a>
+<a href="#faq">FAQ</a>
+<button id="themeBtn" onclick="toggleTheme()">◑ THEME</button>
+</div>
+</div>
+</nav>
+
+<section class="hero">
+<div class="container">
+<div class="hero-badge"><span class="pulse"></span>AI-Powered Valuation Engine v2.1</div>
+<h1>Know What Your<br><span class="g">Domain Is Worth</span></h1>
+<p>Instant AI appraisals using keyword analysis, brandability scoring, TLD multipliers, and premium domain metrics.</p>
+</div>
+</section>
+
+<section id="calculator" class="container">
+<div class="calc-card">
+<div class="calc-title">⬡ Domain Appraiser</div>
+<div class="input-row">
+<input id="domainInput" type="text" placeholder="yourdomain" autocomplete="off" spellcheck="false">
+<select id="tldSelect">
+<option value="com">.com ×3.0</option>
+<option value="ai">.ai ×2.2</option>
+<option value="io">.io ×1.8</option>
+<option value="co">.co ×1.4</option>
+<option value="net">.net ×1.2</option>
+<option value="org">.org ×1.1</option>
+<option value="xyz">.xyz ×0.6</option>
+<option value="app">.app ×1.5</option>
+<option value="dev">.dev ×1.3</option>
+</select>
+<button id="appraiseBtn" onclick="appraise()">▶ APPRAISE</button>
+</div>
+<div id="results">
+<div class="price-display">
+<div class="price-label">Estimated Market Value</div>
+<div class="price-value" id="priceVal">$0</div>
+<div class="price-range" id="priceRange">Range: — — —</div>
+</div>
+<div class="metrics-grid">
+<div class="metric"><div class="metric-val" id="mLen">—</div><div class="metric-lbl">Length</div></div>
+<div class="metric"><div class="metric-val" id="mAI">—</div><div class="metric-lbl">AI Score</div></div>
+<div class="metric"><div class="metric-val" id="mBrand">—</div><div class="metric-lbl">Brandability</div></div>
+<div class="metric"><div class="metric-val" id="mTLD">—</div><div class="metric-lbl">TLD Mult.</div></div>
+</div>
+<div class="meter-wrap">
+<div class="meter-label"><span>AI Relevance</span><span id="aiPct">0%</span></div>
+<div class="meter-bar ai-bar"><div class="meter-fill" id="aiFill" style="width:0%"></div></div>
+</div>
+<div class="meter-wrap">
+<div class="meter-label"><span>Brandability</span><span id="brandPct">0%</span></div>
+<div class="meter-bar brand-bar"><div class="meter-fill" id="brandFill" style="width:0%"></div></div>
+</div>
+<div id="tagsRow" class="tags-row"></div>
+<div class="btn-row">
+<button class="btn-sec" onclick="copyResult()">⎘ Copy Result</button>
+<button class="btn-sec" onclick="saveToHistory()">⊕ Save</button>
+<button class="btn-sec" onclick="clearResult()">✕ Clear</button>
+</div>
+</div>
+</div>
+</section>
+
+<section id="sales" class="ticker-section container">
+<div class="section-title">Recent Sales</div>
+<div class="ticker-wrap">
+<div class="ticker-inner" id="ticker"></div>
+</div>
+</section>
+
+<section id="suggestions" class="suggest-section container">
+<div class="section-title">AI Domain Ideas</div>
+<button class="gen-btn" onclick="genSuggestions()">⟳ Generate New Ideas</button>
+<div class="suggest-grid" id="sugGrid"></div>
+</section>
+
+<section class="history-section container" id="historySection">
+<div class="section-title">Appraisal History</div>
+<div class="history-list" id="histList"></div>
+<button class="clear-btn" onclick="clearHistory()">✕ Clear History</button>
+</section>
+
+<section id="faq" class="faq-section container">
+<div class="section-title">FAQ</div>
+<div id="faqWrap"></div>
+</section>
+
+<footer>
+<div class="container">
+<div class="logo">Domain<span style="color:var(--neon3)">Price</span> AI</div>
+<p>AI-powered domain appraisals &nbsp;·&nbsp; <a href="#calculator">Try it free</a> &nbsp;·&nbsp; Data updated in real-time<br>
+&copy; 2025 DomainPrice AI &nbsp;·&nbsp; For informational purposes only</p>
+</div>
+</footer>
+<div id="toast"></div>
+
+<script>
+const TLD_M={com:3,ai:2.2,io:1.8,co:1.4,net:1.2,org:1.1,xyz:.6,app:1.5,dev:1.3};
+const AI_KW=['ai','gpt','llm','neural','deep','learn','bot','auto','smart','data','cloud','tech','cyber','meta','byte','code','dev','api','ml','nlp','vision','sense','flux','nova','nexus','pulse','sync','flow','node','edge','base','stack','hub'];
+const BRAND_KW=['quick','easy','fast','pro','prime','ultra','max','elite','core','peak','zen','go','up','io','lab','hub','co','ly','ify'];
+const PREMIUM=['ai','cloud','data','tech','cyber','meta','smart','auto','deep','neural','learn','vision','code','dev'];
+const SUFFIXES=['ai','tech','hub','labs','hq','io','co','app','net','pro','ly','go'];
+const PREFIXES=['get','use','try','join','my','the','meta','ultra','super','open'];
+const STEMS=['flux','nova','nexus','pulse','sync','orbit','core','prime','apex','zen','surge','arc','mint','flow','lux','vex','kite','spark','grid','bolt'];
+const FAQS=[
+['How is domain value calculated?','We use the formula P=((K·B·S·E·R)/(L^0.8))+log(A+1)·M where K=keyword score, B=brandability, S=structure, E=extension factor, R=rarity, L=length, A=AI score, M=TLD multiplier. Short, memorable, keyword-rich domains score highest.'],
+['Why is .com worth more?','The .com TLD holds a 3× multiplier due to universal recognition, trust signals, and proven resale history. Other TLDs like .ai and .io have risen sharply in value due to tech sector demand.'],
+['What makes a domain "premium"?','Single-word domains, exact-match keywords, short length (under 6 chars), no hyphens or numbers, and trending tech vocabulary all elevate a domain to premium status.'],
+['Are these valuations accurate?','Our AI scoring provides strong directional estimates. Actual sale prices vary based on buyer intent, market timing, and negotiation. Always verify with multiple appraisal tools.'],
+['How does brandability scoring work?','We analyze pronounceability, memorability, word pattern (CVCV patterns score highest), presence of power suffixes, and absence of confusion characters.'],
+];
+
+let currentResult=null;
+
+function score(name){
+const n=name.toLowerCase().replace(/[^a-z0-9]/g,'');
+const L=n.length||1;
+let K=1,B=1,S=1,E=1,R=1,A=0;
+AI_KW.forEach(k=>{if(n.includes(k))A+=15});
+PREMIUM.forEach(k=>{if(n.includes(k)){K+=1.5;E+=.5}});
+BRAND_KW.forEach(k=>{if(n.includes(k))B+=.8});
+// length bonus
+if(L<=4)S=3;else if(L<=6)S=2;else if(L<=8)S=1.5;else if(L<=12)S=1;else S=.6;
+// structure
+if(!/\d/.test(name))B+=.5;
+if(!name.includes('-'))B+=.5;
+if(/^[a-z]+$/i.test(name)){E+=.5;R=1.5}
+// one word
+const isOneWord=!/[-\d]/.test(n)&&n.length>=3&&n.length<=10;
+if(isOneWord)R+=1;
+// consonant-vowel pattern (pseudo)
+const vowels=(n.match(/[aeiou]/g)||[]).length/L;
+if(vowels>.25&&vowels<.6)B+=.5;
+A=Math.min(A,95);
+return{L,K,B,S,E,R,A};
+}
+
+function calcPrice(name,tld){
+const m=TLD_M[tld]||1;
+const {L,K,B,S,E,R,A}=score(name);
+const base=((K*B*S*E*R)/Math.pow(L,.8))+Math.log(A+1)*m;
+const raw=base*420;
+const p=Math.round(raw/10)*10;
+return{p,A,B:Math.min(Math.round((B/4)*100),99),tldM:m,L,tags:getTags(name,tld,A)};
+}
+
+function getTags(name,tld,a){
+const tags=[];const n=name.toLowerCase();
+if(n.length<=5)tags.push({t:'Ultra Short',c:'good'});
+if(n.length<=8)tags.push({t:'Short',c:'good'});
+if(n.includes('-'))tags.push({t:'Has Hyphen',c:'bad'});
+if(/\d/.test(n))tags.push({t:'Has Numbers',c:'bad'});
+if(PREMIUM.some(k=>n.includes(k)))tags.push({t:'Premium Keyword',c:'good'});
+if(tld==='com')tags.push({t:'.com Premium',c:'good'});
+if(tld==='ai')tags.push({t:'AI Extension',c:'good'});
+if(a>50)tags.push({t:'AI Relevant',c:'good'});
+if(!/[-\d]/.test(n)&&n.length<=10)tags.push({t:'One-Word Bonus',c:'good'});
+if(n.length>14)tags.push({t:'Too Long',c:'bad'});
+return tags;
+}
+
+function fmtPrice(p){
+if(p>=1000000)return'$'+(p/1000000).toFixed(1)+'M';
+if(p>=1000)return'$'+(p/1000).toFixed(1)+'K';
+return'$'+p;
+}
+
+function appraise(){
+const raw=document.getElementById('domainInput').value.trim();
+const tld=document.getElementById('tldSelect').value;
+if(!raw){toast('Enter a domain name');return}
+const name=raw.replace(/\..*$/,'').replace(/[^\w-]/g,'');
+if(!name){toast('Invalid domain');return}
+const{p,A,B,tldM,L,tags}=calcPrice(name,tld);
+const lo=Math.round(p*.6/10)*10,hi=Math.round(p*1.8/10)*10;
+currentResult={domain:name+'.'+tld,price:p,ai:A,brand:B};
+document.getElementById('priceVal').textContent=fmtPrice(p);
+document.getElementById('priceRange').textContent=`Range: ${fmtPrice(lo)} – ${fmtPrice(hi)}`;
+document.getElementById('mLen').textContent=L;
+document.getElementById('mAI').textContent=A;
+document.getElementById('mBrand').textContent=B;
+document.getElementById('mTLD').textContent='×'+tldM;
+setTimeout(()=>{
+document.getElementById('aiFill').style.width=A+'%';
+document.getElementById('aiPct').textContent=A+'%';
+document.getElementById('brandFill').style.width=B+'%';
+document.getElementById('brandPct').textContent=B+'%';
+},50);
+const tr=document.getElementById('tagsRow');
+tr.innerHTML=tags.map(t=>`<span class="tag ${t.c}">${t.t}</span>`).join('');
+document.getElementById('results').style.display='block';
+}
+
+function copyResult(){
+if(!currentResult){toast('Appraise a domain first');return}
+const{domain,price,ai,brand}=currentResult;
+navigator.clipboard.writeText(`${domain} | Est. Value: ${fmtPrice(price)} | AI Score: ${ai} | Brandability: ${brand} | DomainPrice AI`).then(()=>toast('Result copied!')).catch(()=>toast('Copy failed'));
+}
+
+function saveToHistory(){
+if(!currentResult){toast('Nothing to save');return}
+const h=JSON.parse(localStorage.getItem('dpai_history')||'[]');
+h.unshift({...currentResult,time:Date.now()});
+if(h.length>20)h.pop();
+localStorage.setItem('dpai_history',JSON.stringify(h));
+renderHistory();toast('Saved to history!');
+}
+
+function clearResult(){
+document.getElementById('results').style.display='none';
+document.getElementById('domainInput').value='';
+currentResult=null;
+}
+
+function renderHistory(){
+const h=JSON.parse(localStorage.getItem('dpai_history')||'[]');
+const el=document.getElementById('histList');
+if(!h.length){el.innerHTML='<div style="color:var(--muted);font-size:.82rem;padding:12px">No history yet.</div>';return}
+el.innerHTML=h.map((x,i)=>`
+<div class="hist-item" onclick="loadHistory(${i})">
+<span class="hist-domain">${x.domain}</span>
+<span class="hist-price">${fmtPrice(x.price)}</span>
+<span class="hist-time">${timeSince(x.time)}</span>
+</div>`).join('');
+}
+
+function loadHistory(i){
+const h=JSON.parse(localStorage.getItem('dpai_history')||'[]');
+const x=h[i];if(!x)return;
+const parts=x.domain.split('.');
+document.getElementById('domainInput').value=parts[0];
+const tld=parts.slice(1).join('.');
+if(TLD_M[tld])document.getElementById('tldSelect').value=tld;
+appraise();
+document.getElementById('calculator').scrollIntoView({behavior:'smooth'});
+}
+
+function clearHistory(){
+localStorage.removeItem('dpai_history');renderHistory();toast('History cleared');
+}
+
+function timeSince(ts){
+const s=Math.floor((Date.now()-ts)/1000);
+if(s<60)return'Just now';if(s<3600)return Math.floor(s/60)+'m ago';
+if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';
+}
+
+// TICKER
+const SALES_DATA=[
+['OpenAI.com','$11.5M'],['data.ai','$2.1M'],['flux.io','$480K'],['neural.ai','$340K'],['cloud.co','$220K'],
+['meta.io','$190K'],['byte.ai','$155K'],['sync.app','$98K'],['edge.ai','$87K'],['prime.co','$74K'],
+['bolt.io','$65K'],['nova.ai','$59K'],['apex.co','$48K'],['zen.ai','$42K'],['arc.io','$38K'],
+['mint.co','$31K'],['core.ai','$29K'],['grid.io','$25K'],['lux.co','$22K'],['pulse.ai','$18K'],
+];
+const AGO=['3m ago','12m ago','1h ago','2h ago','4h ago','6h ago','8h ago','1d ago','2d ago','3d ago'];
+function buildTicker(){
+const all=[...SALES_DATA,...SALES_DATA];
+const html=all.map(([d,p])=>`
+<div class="tick-item">
+<span class="tick-domain">${d}</span>
+<span class="tick-price">${p}</span>
+<span class="tick-time">${AGO[Math.floor(Math.random()*AGO.length)]}</span>
+</div>`).join('');
+document.getElementById('ticker').innerHTML=html;
+}
+
+// SUGGESTIONS
+const CATS=[
+['ai','tech','lab','data','neural','cloud','smart','deep','byte','code','dev','meta','cyber','edge','core'],
+['flux','nova','nexus','pulse','sync','orbit','apex','zen','surge','arc','mint','bolt','grid','lux','dash'],
+];
+function genSuggestions(){
+const grid=document.getElementById('sugGrid');
+grid.innerHTML='';
+const picks=[];
+for(let i=0;i<9;i++){
+const stem=STEMS[Math.floor(Math.random()*STEMS.length)];
+const suf=SUFFIXES[Math.floor(Math.random()*SUFFIXES.length)];
+const pre=PREFIXES[Math.floor(Math.random()*PREFIXES.length)];
+const tlds=['com','ai','io','co','app'];
+const tld=tlds[Math.floor(Math.random()*tlds.length)];
+const names=[stem,stem+suf,pre+stem,AI_KW[Math.floor(Math.random()*AI_KW.length)]+stem];
+const name=names[Math.floor(Math.random()*names.length)];
+const{p,A,B}=calcPrice(name,tld);
+picks.push({name:name+'.'+tld,p,A,B});
+}
+picks.forEach(({name,p,A,B})=>{
+const d=document.createElement('div');
+d.className='suggest-card';
+d.innerHTML=`<div class="sug-name">${name}</div>
+<div class="sug-price">${fmtPrice(p)}</div>
+<div class="sug-score">AI ${A} · Brand ${B}</div>`;
+d.onclick=()=>{
+const parts=name.split('.');
+document.getElementById('domainInput').value=parts[0];
+const tld=parts.slice(1).join('.');
+if(TLD_M[tld])document.getElementById('tldSelect').value=tld;
+appraise();
+document.getElementById('calculator').scrollIntoView({behavior:'smooth'});
+};
+grid.appendChild(d);
+});
+}
+
+// FAQ
+function buildFAQ(){
+const wrap=document.getElementById('faqWrap');
+wrap.innerHTML=FAQS.map((f,i)=>`
+<div class="faq-item" id="faq${i}">
+<div class="faq-q" onclick="toggleFAQ(${i})">
+<span>${f[0]}</span><span class="arr">▾</span>
+</div>
+<div class="faq-a"><p>${f[1]}</p></div>
+</div>`).join('');
+}
+function toggleFAQ(i){
+document.getElementById('faq'+i).classList.toggle('open');
+}
+
+function toggleTheme(){
+const t=document.documentElement.getAttribute('data-theme');
+document.documentElement.setAttribute('data-theme',t==='dark'?'light':'dark');
+localStorage.setItem('dpai_theme',t==='dark'?'light':'dark');
+}
+
+function toast(msg){
+const t=document.getElementById('toast');
+t.textContent=msg;t.classList.add('show');
+setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ENTER key
+document.addEventListener('DOMContentLoaded',()=>{
+const savedTheme=localStorage.getItem('dpai_theme');
+if(savedTheme)document.documentElement.setAttribute('data-theme',savedTheme);
+buildTicker();genSuggestions();buildFAQ();renderHistory();
+document.getElementById('domainInput').addEventListener('keydown',e=>{
+if(e.key==='Enter')appraise();
+});
+});
+</script>
+</body>
+</html>
